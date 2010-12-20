@@ -81,7 +81,7 @@ sub run {
 		}
 	}
 
-	$self->model->serialize;
+	$self->model->freeze;
 }
 
 sub status_msg {

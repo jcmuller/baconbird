@@ -791,7 +791,7 @@ sub destroy_direct_message {
 	}
 }
 
-sub serialize {
+sub freeze {
 	my $self = shift;
 
 	my @objs_to_save = qw(
