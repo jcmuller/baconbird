@@ -825,19 +825,6 @@ sub serialize {
 sub thaw {
 	my $self = shift;
 
-	my @objs_to_save = qw(
-		all_dms
-		all_messages
-		direct_messages
-		favorites_timeline
-		home_timeline
-		mentions
-		my_timeline
-		rt_by_me_timeline
-		rt_of_me_timeline
-		user_timeline
-	);
-
 	my $dir = $self->ctrl->configdir;
 	eval {
 		my $restore_me = Storable::retrieve("$dir/.model");
