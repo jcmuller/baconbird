@@ -829,16 +829,55 @@ sub thaw {
 	eval {
 		my $restore_me = Storable::retrieve("$dir/.model");
 
-		$self->all_dms($restore_me->{all_dms});
-		$self->all_messages($restore_me->{all_messages});
-		$self->direct_messages($restore_me->{direct_messages});
-		$self->favorites_timeline($restore_me->{favorites_timeline});
-		$self->home_timeline($restore_me->{home_timeline});
-		$self->mentions($restore_me->{mentions});
-		$self->my_timeline($restore_me->{my_timeline});
-		$self->rt_by_me_timeline($restore_me->{rt_by_me_timeline});
-		$self->rt_of_me_timeline($restore_me->{rt_of_me_timeline});
-		$self->user_timeline($restore_me->{user_timeline});
+		my $all_dms = $restore_me->{all_dms};
+		if ($all_dms and ref $all_dms eq 'ARRAY' and @$all_dms) {
+			$self->all_dms($all_dms);
+		}
+
+		my $all_messages = $restore_me->{all_messages};
+		if ($all_messages and ref $all_messages eq 'HASH' and %$all_messages) {
+			$self->all_messages($all_messages);
+		}
+
+		my $direct_messages = $restore_me->{direct_messages};
+		if ($direct_messages and ref $direct_messages eq 'HASH' and %$direct_messages) {
+			$self->direct_messages($direct_messages);
+		}
+
+		my $favorites_timeline = $restore_me->{favorites_timeline};
+		if ($favorites_timeline and ref $favorites_timeline eq 'ARRAY' and @$favorites_timeline) {
+			$self->favorites_timeline($favorites_timeline);
+		}
+
+		my $home_timeline = $restore_me->{home_timeline};
+		if ($home_timeline and ref $home_timeline eq 'ARRAY' and @$home_timeline) {
+			$self->home_timeline($home_timeline);
+		}
+
+		my $mentions = $restore_me->{mentions};
+		if ($mentions and ref $mentions eq 'ARRAY' and @$mentions) {
+			$self->mentions($mentions);
+		}
+
+		my $my_timeline = $restore_me->{my_timeline};
+		if ($my_timeline and ref $my_timeline eq 'ARRAY' and @$my_timeline) {
+			$self->my_timeline($my_timeline);
+		}
+
+		my $rt_by_me_timeline = $restore_me->{rt_by_me_timeline};
+		if ($rt_by_me_timeline and ref $rt_by_me_timeline eq 'ARRAY' and @$rt_by_me_timeline) {
+			$self->rt_by_me_timeline($rt_by_me_timeline);
+		}
+
+		my $rt_of_me_timeline = $restore_me->{rt_of_me_timeline};
+		if ($rt_of_me_timeline and ref $rt_of_me_timeline eq 'ARRAY' and @$rt_of_me_timeline) {
+			$self->rt_of_me_timeline($rt_of_me_timeline);
+		}
+
+		my $user_timeline = $restore_me->{user_timeline};
+		if ($user_timeline and ref $user_timeline eq 'ARRAY' and @$user_timeline) {
+			$self->user_timeline($user_timeline);
+		}
 	};
 
 	if (my $err = $@) {
