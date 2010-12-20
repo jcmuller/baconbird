@@ -80,6 +80,8 @@ sub run {
 			$self->view->status_msg("Error: $err");
 		}
 	}
+
+	$self->model->serialize;
 }
 
 sub status_msg {

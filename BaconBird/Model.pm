@@ -2,6 +2,7 @@ package BaconBird::Model;
 use Moose;
 
 use Data::Dumper;
+use Storable;
 
 use constant CONSUMER_KEY    => "HNWGxf3exkB1mQGpM83PWw";
 use constant CONSUMER_SECRET => "dcQsVwycEa6vNCMO0ljbzZfzloqBXcRDMYXRo1bsN7k";
@@ -183,6 +184,12 @@ has 'my_timeline_ts' => (
 	isa => 'Int',
 	default => 0,
 );
+
+sub BUILD {
+	my $self = shift;
+
+	$self->thaw;
+}
 
 sub login {
 	my $self = shift;
@@ -781,6 +788,74 @@ sub destroy_direct_message {
 	};
 	if (my $err = $@) {
 		return 1;
+	}
+}
+
+sub serialize {
+	my $self = shift;
+
+	my @objs_to_save = qw(
+		all_dms
+		all_messages
+		direct_messages
+		favorites_timeline
+		home_timeline
+		mentions
+		my_timeline
+		rt_by_me_timeline
+		rt_of_me_timeline
+		user_timeline
+	);
+
+	my $save_me = {};
+	foreach my $obj (@objs_to_save) {
+		$save_me->{$obj} = $self->{$obj};
+	}
+
+	my $dir = $self->ctrl->configdir;
+	eval {
+		Storable::store($save_me, "$dir/.model");
+	};
+
+	if (my $err = $@) {
+		die "Error saving status: $err\n";
+	}
+}
+
+sub thaw {
+	my $self = shift;
+
+	my @objs_to_save = qw(
+		all_dms
+		all_messages
+		direct_messages
+		favorites_timeline
+		home_timeline
+		mentions
+		my_timeline
+		rt_by_me_timeline
+		rt_of_me_timeline
+		user_timeline
+	);
+
+	my $dir = $self->ctrl->configdir;
+	eval {
+		my $restore_me = Storable::retrieve("$dir/.model");
+
+		$self->all_dms($restore_me->{all_dms});
+		$self->all_messages($restore_me->{all_messages});
+		$self->direct_messages($restore_me->{direct_messages});
+		$self->favorites_timeline($restore_me->{favorites_timeline});
+		$self->home_timeline($restore_me->{home_timeline});
+		$self->mentions($restore_me->{mentions});
+		$self->my_timeline($restore_me->{my_timeline});
+		$self->rt_by_me_timeline($restore_me->{rt_by_me_timeline});
+		$self->rt_of_me_timeline($restore_me->{rt_of_me_timeline});
+		$self->user_timeline($restore_me->{user_timeline});
+	};
+
+	if (my $err = $@) {
+		die "Error loading status: $err\n";
 	}
 }
 
