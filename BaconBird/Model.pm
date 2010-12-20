@@ -842,7 +842,7 @@ sub thaw {
 	};
 
 	if (my $err = $@) {
-		die "Error loading status: $err\n";
+		print STDERR "Error loading status: $err\n";
 	}
 }
 
